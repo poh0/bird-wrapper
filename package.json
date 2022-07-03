@@ -1,0 +1,24 @@
+{
+  "name": "bird-wrapper",
+  "version": "1.0.0",
+  "description": "API wrapper for Bird e-scooters",
+  "main": "bird-wrapper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poh0/bird-wrapper.git"
+  },
+  "author": "poh0",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/poh0/bird-wrapper/issues"
+  },
+  "homepage": "https://github.com/poh0/bird-wrapper#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "moment": "^2.29.3",
+    "uuid": "^8.3.2"
+  }
+}
