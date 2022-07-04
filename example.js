@@ -4,11 +4,17 @@ const bird = new BirdApi()
 
 const init = async () => {
 
+    // Authenticate with email
     await bird.authEmail("mock email here")
 
-    // Get every bird from center of Berlin with radius of 500
-    const res = await bird.getNearbyBirds('52.520008', '13.404954')
-    console.log(res)
+    // Set location to center of berlin
+    bird.setLocation('65.013207', '25.472837')
+
+    // Get every nearby bird
+    const nearbyBirds = await bird.getNearbyBirds()
+
+    // get user profile
+    const profile = await bird.getProfile()
 }
 
 init()

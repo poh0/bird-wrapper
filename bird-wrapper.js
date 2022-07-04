@@ -91,6 +91,33 @@ class BirdApi {
     }
 
     /**
+     * Get profile (requires auth token)
+     * @date 2022-07-04
+     * @returns {object} Profile data
+     */
+    async getProfile() {
+        try {
+            if (!this.accessToken) {
+                throw {msg: 'Not authorized. Please authEmail()'}
+            }
+
+            let response = await this.request({
+                method: 'GET',
+                url: '/user',
+                responseType: 'json',
+                headers: {
+                    Authorization: this.accessToken,
+                    Location: JSON.stringify(this.location)
+                }
+            })
+            return response.data
+
+        } catch (error) {
+            return error
+        }
+    }
+
+    /**
      * Requires access token
      * Gets every bird of a location (apparently, radius is not working)
      * @date 2022-07-03
