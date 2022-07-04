@@ -12,6 +12,16 @@ class BirdApi {
         // Fake device id for api instance
         this.deviceId = uuidv4().toUpperCase()
 
+        // random location because some endpoints need it in the header
+        // can be set by user with setLocation
+        this.location = {
+            latitude: '52.520008',
+            longitude: '13.404954',
+            altitude: 500,
+            speed: -1,
+            heading: -1
+        }
+
         // Mandatory headers
         this.defaultHeaders = {
             'Content-Type': 'application/json',
@@ -38,12 +48,19 @@ class BirdApi {
         })
     }
 
-    /*
-     * @param {string} token Access token
-     */
     setAccessToken(token) {
         // TODO: (better?) way to save access token
         this.accessToken = `Bearer ${token}`
+    }
+
+    setLocation(latitude, longitude) {
+        this.location = {
+            latitude,
+            longitude,
+            altitude: 500,
+            speed: -1,
+            heading: -1
+        }
     }
 
     /**
@@ -75,18 +92,13 @@ class BirdApi {
 
     /**
      * Requires access token
-     * Gets every bird of a location in a certain radius
+     * Gets every bird of a location (apparently, radius is not working)
      * @date 2022-07-03
-     * @param {string} latitude Latitude coordinates of the location
-     * @param {string} longitude Longitude coordinates of the location
      * @param {number} radius=500
      * @returns {object} Response data or error data
      */
-    async getNearbyBirds(latitude, longitude, radius = 500) {
+    async getNearbyBirds(radius = 500) {
         try {
-            if (!latitude || !longitude) {
-                throw {msg: 'Please provide latitude and longitude'}
-            }
     
             if (!this.accessToken) {
                 throw {msg: 'Not authorized. Please authEmail()'}
@@ -96,19 +108,12 @@ class BirdApi {
                 method: 'GET',
                 url: '/bird/nearby',
                 params: {
-                    latitude,
-                    longitude,
+                    latitude: this.location.latitude,
+                    longitude: this.location.longitude,
                     radius
                 },
                 headers: {
-                    Location: JSON.stringify({
-                        latitude,
-                        longitude,
-                        altitude: 500,
-                        accuracy: 100,
-                        speed: -1,
-                        heading: -1
-                    }),
+                    Location: JSON.stringify(this.location),
                     Authorization: this.accessToken
                 }, 
                 responseType: 'json'
