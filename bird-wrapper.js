@@ -64,8 +64,9 @@ class BirdApi {
     }
 
     /**
-     * Login using email. (Saves access token to instance)
+     * Authenticate using email
      * If it's first time for the email, new account is registered.
+     * Otherwise you'll have to verify email
      * @date 2022-07-03
      * @param {string} email
      * @returns {object} Response data | error data
@@ -83,10 +84,39 @@ class BirdApi {
                 },
                 reponseType: 'json'
             })
-            this.setAccessToken(response.data.tokens.access)
+
+            const { validation_required } = response.data
+
+            if (!validation_required) {
+                this.setAccessToken(response.data.tokens.access)
+            }
+
             return {data: response.data, email}
         } catch (error) {
             return error
+        }
+    }
+
+    /**
+     * Verify email
+     * @date 2022-07-04
+     * @param {string} token Verification token
+     * @returns {object} Profile data
+     */
+    async verifyEmail(token) {
+        try {
+            let response = await this.authRequest({
+                'method': 'POST',
+                'url': '/auth/magic-link/use',
+                'data': {
+                    'token': token
+                },
+                'responseType': 'json'
+            });
+            this.setAccessToken(response.data.access);
+            return response.data;
+        } catch (error) {
+            return error;
         }
     }
 
